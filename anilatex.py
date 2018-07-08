@@ -36,16 +36,22 @@ def print_latex(body, workspace, template=None, preamble=None, filename='temp', 
     document = document.replace('\\input{anilatex-preamble}', preamble or '')
     document = document.replace('\\input{anilatex-body}', body)
     tex_path = os.path.join(workspace, '{}.tex'.format(filename))
-    dvi_path = os.path.join(workspace, '{}.dvi'.format(filename))
+    pdf_path = os.path.join(workspace, '{}.pdf'.format(filename))
     png_path = os.path.join(workspace, '{}.png'.format(filename))
     with open(tex_path, 'w', encoding='utf-8') as file:
         file.write(document)
-    with open(os.devnull, 'w') as devnull:
-        subprocess.run(['latex', tex_path],
-            cwd=workspace, stdout=devnull)
-        subprocess.run(['dvipng', dvi_path,
-            '-o', png_path, '-D', '{}'.format(dpi or DEFAULT_DPI)],
-            cwd=workspace, stdout=devnull)
+    #with open(os.devnull, 'w') as devnull:
+    subprocess.run(['xelatex', tex_path],
+        cwd=workspace)#, stdout=devnull)
+    dpi = dpi or DEFAULT_DPI
+    print('-DownScaleFactor={}'.format(3))
+    subprocess.run(['gswin64c', '-dSAFER', '-dBATCH', '-dNOPAUSE',
+        '-r{}'.format(dpi*3), '-DownScaleFactor={}'.format(3), '-sDEVICE=png16m', '-dGraphicsAlphaBits=4',
+        '-sOutputFile={}'.format(png_path), pdf_path],
+        cwd=workspace)#, stdout=devnull)
+    # subprocess.run(['dvipng', dvi_path,
+    #     '-o', png_path, '-D', '{}'.format(dpi or DEFAULT_DPI)],
+    #     cwd=workspace)#, stdout=devnull)
 
 
 def parse_animath(path):
@@ -70,7 +76,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='A python script to parse AniMath scripts.')
     parser.add_argument('text', nargs='?',
         help='text to write (bypass -i and --demo if provided)')
-    parser.add_argument('-D', nargs='?',
+    parser.add_argument('-D', nargs='?', type=int, const=DEFAULT_DPI,
         help='output resolution of text', metavar='dpi', dest='outres')
     parser.add_argument('-i', nargs='?',
         help='name of script to be parsed', metavar='input_file', dest='input')
