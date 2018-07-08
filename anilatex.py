@@ -39,10 +39,14 @@ def print_latex(body, workspace, template=None, preamble=None, filename='temp', 
     with open(tex_path, 'w', encoding='utf-8') as file:
         file.write(document)
     #with open(os.devnull, 'w') as devnull:
-    subprocess.run(['xelatex', tex_path],
+    tex_backend = 'xelatex'
+    subprocess.run([tex_backend, tex_path],
         cwd=workspace)#, stdout=devnull)
     dpi = dpi or DEFAULT_DPI
-    subprocess.run(['gswin64c', '-dSAFER', '-dBATCH', '-dNOPAUSE',
+    gs_backend = 'gs'
+    if os.name == 'nt':
+        gs_backend = 'gswin64c'
+    subprocess.run([gs_backend, '-dSAFER', '-dBATCH', '-dNOPAUSE',
         '-r{}'.format(dpi*3), '-DownScaleFactor={}'.format(3), '-dGraphicsAlphaBits=4', '-sDEVICE=pngalpha',
         '-sOutputFile={}'.format(png_path), pdf_path],
         cwd=workspace)#, stdout=devnull)
