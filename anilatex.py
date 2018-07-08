@@ -44,9 +44,8 @@ def print_latex(body, workspace, template=None, preamble=None, filename='temp', 
     subprocess.run(['xelatex', tex_path],
         cwd=workspace)#, stdout=devnull)
     dpi = dpi or DEFAULT_DPI
-    print('-DownScaleFactor={}'.format(3))
     subprocess.run(['gswin64c', '-dSAFER', '-dBATCH', '-dNOPAUSE',
-        '-r{}'.format(dpi*3), '-DownScaleFactor={}'.format(3), '-sDEVICE=png16m', '-dGraphicsAlphaBits=4',
+        '-r{}'.format(dpi*3), '-DownScaleFactor={}'.format(3), '-dGraphicsAlphaBits=4', '-sDEVICE=pngalpha',
         '-sOutputFile={}'.format(png_path), pdf_path],
         cwd=workspace)#, stdout=devnull)
     # subprocess.run(['dvipng', dvi_path,
