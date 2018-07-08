@@ -1,12 +1,10 @@
-﻿#!/usr/bin/python3
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-# Main script.
 import argparse
 import errno
 import os
-import subprocess
 import re
+import subprocess
 from shutil import copy2
 
 # Global variables.
