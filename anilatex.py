@@ -9,24 +9,32 @@ import subprocess
 import re
 from shutil import copy2
 
+# Global variables.
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_DPI = 72
 
+
+# Global regular expressions.
 REGEX = {
     'print': r'显示“(.*)”。'
 }
 
 
-def print_latex(string, workspace, filename='temp'):
+def print_latex(body, workspace, template=None, preamble=None, filename='temp', dpi=None):
     """Produce and compile a standalone LaTeX file"""
-    preamble = """\\documentclass[preview]{{standalone}}
-\\usepackage{{CJK}}
-\\begin{{document}}
-\\begin{{CJK}}{{UTF8}}{{gbsn}}%
-{}
-\\end{{CJK}}
-\\end{{document}}
-"""
-    document = preamble.format(string)
+    document = """
+        \\documentclass[preview]{standalone}
+        \\input{anilatex-preamble}
+        \\begin{document}
+        \\input{anilatex-body}
+        \\end{document}
+    """
+    if template is not None:
+        template_path = os.path.join(PROJECT_DIR, 'template', '{}.tex'.format(template))
+        with open(template_path, 'r', encoding='utf-8') as file:
+            document = file.read()
+    document = document.replace('\\input{anilatex-preamble}', preamble or '')
+    document = document.replace('\\input{anilatex-body}', body)
     tex_path = os.path.join(workspace, '{}.tex'.format(filename))
     dvi_path = os.path.join(workspace, '{}.dvi'.format(filename))
     png_path = os.path.join(workspace, '{}.png'.format(filename))
@@ -35,7 +43,8 @@ def print_latex(string, workspace, filename='temp'):
     with open(os.devnull, 'w') as devnull:
         subprocess.run(['latex', tex_path],
             cwd=workspace, stdout=devnull)
-        subprocess.run(['dvipng', dvi_path, '-o', png_path, '-D', '600'],
+        subprocess.run(['dvipng', dvi_path,
+            '-o', png_path, '-D', '{}'.format(dpi or DEFAULT_DPI)],
             cwd=workspace, stdout=devnull)
 
 
@@ -60,11 +69,15 @@ def parse_animath(path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='A python script to parse AniMath scripts.')
     parser.add_argument('text', nargs='?',
-        help='LaTeX document body to write (can leave empty)')
-    parser.add_argument('-i', nargs=1,
+        help='text to write (bypass -i and --demo if provided)')
+    parser.add_argument('-D', nargs='?',
+        help='output resolution of text', metavar='dpi', dest='outres')
+    parser.add_argument('-i', nargs='?',
         help='name of script to be parsed', metavar='input_file', dest='input')
-    parser.add_argument('-o',
+    parser.add_argument('-o', nargs='?',
         help='name of output file', metavar='output_file', dest='output')
+    parser.add_argument('-t', nargs='?',
+        help='name of template file', metavar='template_file', dest='template')
     parser.add_argument('--demo', nargs='?', const='hello_world',
         help='name of demo to be executed', metavar='demo_name')
     args = parser.parse_args()
@@ -80,7 +93,8 @@ if __name__ == '__main__':
         except OSError as e:
             if e.errno != errno.EEXIST:
                 raise
-        print_latex(args.text, directory, filename=args.output)
+        print_latex(args.text, directory,
+            filename=args.output, dpi=args.outres, template=args.template)
         copy2(png_path, os.getcwd())
     elif args.demo is not None:
         path = os.path.join(PROJECT_DIR, 'demo', args.demo)
