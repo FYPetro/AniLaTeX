@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import argparse
+import configparser
 import errno
 import os
 import re
@@ -8,8 +9,21 @@ import subprocess
 from shutil import copy2
 
 # Global variables.
+config = configparser.ConfigParser()
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DPI = 72
+if os.name == 'nt':
+    DEFAULT_FONT = {
+        'chinese': 'SimSun',
+        'japanese': 'MS Mincho',
+        'korean': 'Malgun Gothic'
+    }
+else:
+    DEFAULT_FONT = {
+        'chinese': 'AR PL SungtiL GB',
+        'japanese': 'TakaoMincho',
+        'korean': 'Baekmuk Batang'
+    }
 
 
 # Global regular expressions.
@@ -31,6 +45,9 @@ def print_latex(body, workspace, template=None, preamble=None, filename='temp', 
         template_path = os.path.join(PROJECT_DIR, 'template', '{}.tex'.format(template))
         with open(template_path, 'r', encoding='utf-8') as file:
             document = file.read()
+    document = document.replace('\\input{anilatex-CJKChinese}', DEFAULT_FONT['chinese'])
+    document = document.replace('\\input{anilatex-CJKJapanese}', DEFAULT_FONT['japanese'])
+    document = document.replace('\\input{anilatex-CJKKorean}', DEFAULT_FONT['korean'])
     document = document.replace('\\input{anilatex-preamble}', preamble or '')
     document = document.replace('\\input{anilatex-body}', body)
     tex_path = os.path.join(workspace, '{}.tex'.format(filename))
@@ -74,6 +91,11 @@ def parse_animath(path):
 
 
 if __name__ == '__main__':
+    config.read('{}.ini'.format(os.name))
+    DEFAULT_FONT['chinese'] = config.get('Fonts', 'CJKChinese', fallback=DEFAULT_FONT['chinese'])
+    DEFAULT_FONT['japanese'] = config.get('Fonts', 'CJKJapanese', fallback=DEFAULT_FONT['japanese'])
+    DEFAULT_FONT['korean'] = config.get('Fonts', 'CJKKorean', fallback=DEFAULT_FONT['korean'])
+
     parser = argparse.ArgumentParser(description='A python script to parse AniMath scripts.')
     parser.add_argument('text', nargs='?',
         help='text to write (bypass -i and --demo if provided)')
