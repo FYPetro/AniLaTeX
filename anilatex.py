@@ -34,7 +34,7 @@ REGEX = {
 }
 
 
-def print_latex(body, workspace, template=None, filename='temp', dpi=None, placeholder={}):
+def print_latex(body, workspace, filename='temp', template=None, cjk=False, dpi=None, placeholder={}):
     """Produce and compile a standalone LaTeX file"""
     document = """\\documentclass[preview,margin=1pt]{standalone}
 \\usepackage{amsmath}
@@ -43,8 +43,25 @@ def print_latex(body, workspace, template=None, filename='temp', dpi=None, place
 \\input{AniLaTeX-body}
 \\end{document}
 """
-    if 'preamble' not in placeholder:
-        placeholder['preamble'] = ''
+    cjk_preamble = """\\usepackage{{fontspec}}
+\\usepackage{{xeCJK}}
+% Reference: https://tex.stackexchange.com/a/45403
+\\setCJKfamilyfont{{zhrm}}{{{}}}
+\\setCJKfamilyfont{{jarm}}{{{}}}
+\\setCJKfamilyfont{{korm}}{{{}}}
+\\newcommand\\Chi{{\\CJKfamily{{zhrm}}\\CJKnospace}}
+\\newcommand\\Jpn{{\\CJKfamily{{jarm}}\\CJKnospace}}
+\\newcommand\\Kor{{\\CJKfamily{{korm}}\\CJKnospace}}
+""".format(DEFAULT_FONT['chinese'], DEFAULT_FONT['japanese'], DEFAULT_FONT['korean'])
+    default_inputs = {
+        'preamble': '',
+    }
+    for key, value in default_inputs.items():
+        if key not in placeholder:
+            placeholder[key] = value
+
+    if cjk is True:
+        placeholder['preamble'] = cjk_preamble + placeholder['preamble']
 
     if template is not None:
         template_path = os.path.join(PROJECT_DIR, 'template', '{}.tex'.format(template))
@@ -111,6 +128,8 @@ if __name__ == '__main__':
         help='name of output file', metavar='output_file', dest='output')
     parser.add_argument('-t', nargs='?',
         help='name of template file', metavar='template_file', dest='template')
+    parser.add_argument('-cjk', action='store_true',
+        help='enable xeCJK package', dest='cjk')
     parser.add_argument('--demo', nargs='?', const='hello_world',
         help='name of demo to be executed', metavar='demo_name')
     args, unknown = parser.parse_known_args()
@@ -141,7 +160,7 @@ if __name__ == '__main__':
                 raise
         print_latex(args.text, directory,
             filename=args.output, dpi=args.outres, template=args.template,
-            placeholder=parameter)
+            cjk=args.cjk, placeholder=parameter)
         copy2(png_path, os.getcwd())
     elif args.demo is not None:
         """Turn AniLaTeX demo file into still image"""
