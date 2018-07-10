@@ -4,13 +4,14 @@
 Test project.
 
 # Prerequisites
-1. Windows
+1. Windows or Ubuntu
 2. Python 3
 3. XeLaTeX
 4. GhostScript
 
-# Usage
+Install the prerequisites then add relevant directories to the system-wide `Path` (Windows) or `$PATH` (*nix)
 
+# Examples
 Generate the logo:
 
     anilatex.py "Ani\LaTeX" -D 600 -o anilatex.png
