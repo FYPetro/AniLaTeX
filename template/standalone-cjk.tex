@@ -1,9 +1,11 @@
 ﻿% Standalone CJK template for XeLaTeX.
-\documentclass[preview]{standalone}
+\documentclass[preview,margin=1pt]{standalone}
 \usepackage{fontspec}
-\usepackage[fallback]{xeCJK}
+\usepackage[fallback,space]{xeCJK}
+\usepackage{amsmath}
 \setCJKmainfont[BoldFont=FandolSong-Bold.otf]{FandolSong-Regular.otf}
-\setCJKfallbackfamilyfont{\CJKrmdefault}{NotoSerifCJK-Regular.ttc}
+%\setCJKfallbackfamilyfont{\CJKrmdefault}{NotoSerifCJK-Regular.ttc}
+\setCJKfallbackfamilyfont{\CJKrmdefault}{Batang}
 \input{anilatex-preamble}
 \begin{document}
 \input{anilatex-body}

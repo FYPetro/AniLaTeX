@@ -20,13 +20,13 @@ REGEX = {
 
 def print_latex(body, workspace, template=None, preamble=None, filename='temp', dpi=None):
     """Produce and compile a standalone LaTeX file"""
-    document = """
-        \\documentclass[preview]{standalone}
-        \\input{anilatex-preamble}
-        \\begin{document}
-        \\input{anilatex-body}
-        \\end{document}
-    """
+    document = """\\documentclass[preview,margin=1pt]{standalone}
+\\usepackage{amsmath}
+\\input{anilatex-preamble}
+\\begin{document}
+\\input{anilatex-body}
+\\end{document}
+"""
     if template is not None:
         template_path = os.path.join(PROJECT_DIR, 'template', '{}.tex'.format(template))
         with open(template_path, 'r', encoding='utf-8') as file:
