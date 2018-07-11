@@ -1,1 +1,1 @@
-﻿显示“Hello, world! This is an equation: $e^{i\pi}+1=0$.\\你好，世界！这是一个等式：$\sin{x}\cos{x}=2\sin{2x}$。\\こんにちは世界！これは方程式であります：$\nabla\cdot\mathbf{B}=0$。”。
+﻿显示“Hello, world! This is an equation: $e^{i\pi}+1=0$.\\你好，世界！以下是一个等式：$\sin{x}\cos{x}=2\sin{2x}$。\\こんにちは世界！以下は方程式であります：$\nabla\cdot\mathbf{B}=0$。”。

@@ -30,7 +30,9 @@ else:
 # Global regular expressions.
 REGEX = {
     'print': r'显示“(.*)”。',
-    'parameter': r'^--([a-zA-Z][a-zA-Z0-9]*)$'
+    'parameter': r'^--([a-zA-Z][a-zA-Z0-9]*)$',
+    'placeholder': r'\\input{AniLaTeX-([a-zA-Z][a-zA-Z0-9]+)(?::([0-9]+))?(?:={(.*?)})?}',
+    'section': r'(\\begin{AniLaTeX-(([a-zA-Z][a-zA-Z0-9]+?)(?::([0-9]+))?)}).*?(\\end{AniLaTeX-\2})'
 }
 
 
@@ -71,9 +73,33 @@ def print_latex(body, workspace, filename='temp', template=None, cjk=False, dpi=
     document = document.replace('\\input{AniLaTeX-CJKChinese}', DEFAULT_FONT['chinese'])
     document = document.replace('\\input{AniLaTeX-CJKJapanese}', DEFAULT_FONT['japanese'])
     document = document.replace('\\input{AniLaTeX-CJKKorean}', DEFAULT_FONT['korean'])
-    document = document.replace('\\input{AniLaTeX-body}', body)
-    for key, value in placeholder.items():
-        document = document.replace('\\input{AniLaTeX-' + key + '}', value)
+
+    # Turn on or turn off a section.
+    for s in re.finditer(REGEX['section'], document, flags=re.S):
+        key = s.group(3)
+        index = int(s.group(4) or '1')
+        # Body section:     \begin{AniLaTeX-body:1}
+        #                   \end{AniLaTeX-body:1}
+        # Placeholder text: \begin{AniLaTeX-key}
+        #                   \end{AniLaTeX-key}
+        if (key == 'body' and index > len(body)) or (not key == 'body' and not key in placeholder):
+            document = document.replace(s.group(0), '')
+        else:
+            document = document.replace(s.group(1), '').replace(s.group(5), '')
+
+    # Replace all placeholders with specified value or default ones
+    for s in re.finditer(REGEX['placeholder'], document):
+        key = s.group(1)
+        index = int(s.group(2) or '1')
+        default_value = s.group(3) or ''
+        value = None
+        # Body text:        \input{AniLaTeX-body:1={Default}}
+        if key == 'body' and 0 < index <= len(body):
+            value = body[index - 1]
+        # Placeholder text: \input{AniLaTeX-key={Default}}
+        elif key in placeholder:
+            value = placeholder[key]
+        document = document.replace(s.group(0), value or default_value)
 
     tex_path = os.path.join(workspace, '{}.tex'.format(filename))
     pdf_path = os.path.join(workspace, '{}.pdf'.format(filename))
@@ -118,16 +144,16 @@ if __name__ == '__main__':
     DEFAULT_FONT['korean'] = config.get('Fonts', 'CJKKorean', fallback=DEFAULT_FONT['korean'])
 
     parser = argparse.ArgumentParser(description='A python script to parse AniMath scripts.')
-    parser.add_argument('text', nargs='?',
+    parser.add_argument('text', nargs='*',
         help='text to write (bypass -i and --demo if provided)')
     parser.add_argument('-D', nargs='?', type=int, const=DEFAULT_DPI,
         help='output resolution of text', metavar='dpi', dest='outres')
     parser.add_argument('-i', nargs='?',
-        help='name of script to be parsed', metavar='input_file', dest='input')
+        help='name of script to be parsed', metavar='file', dest='input')
     parser.add_argument('-o', nargs='?',
-        help='name of output file', metavar='output_file', dest='output')
+        help='name of output file', metavar='file', dest='output')
     parser.add_argument('-t', nargs='?',
-        help='name of template file', metavar='template_file', dest='template')
+        help='name of template file', metavar='template', dest='template')
     parser.add_argument('-cjk', action='store_true',
         help='enable xeCJK package', dest='cjk')
     parser.add_argument('--demo', nargs='?', const='hello_world',
@@ -142,14 +168,16 @@ if __name__ == '__main__':
     truly_unknown = []
     for index in range(0,len(unknown)):
         scurrent = re.search(REGEX['parameter'], unknown[index])
-        if scurrent and index + 1 < len(unknown) and not re.search(REGEX['parameter'], unknown[index + 1]):
+        if scurrent and index < len(unknown):
             key = scurrent.group(1)
-            value = unknown[index + 1]
-            parameter[scurrent.group(1)] = unknown[index + 1]
+            value = None
+            if index + 1 < len(unknown) and not re.search(REGEX['parameter'], unknown[index + 1]):
+                value = unknown[index + 1]
+            parameter[key] = value
         else:
             truly_unknown.append(unknown[index])
 
-    if args.text is not None:
+    if len(args.text) > 0:
         """Turn text into still image"""
         directory = os.path.join(PROJECT_DIR, 'demo', 'ws')
         png_path = os.path.join(directory, '{}.png'.format(args.output))
