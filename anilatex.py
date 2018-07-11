@@ -7,7 +7,7 @@ import logging
 import os
 import re
 import subprocess
-from shutil import copy2
+from shutil import copy2, rmtree
 
 # Global variables.
 config = configparser.ConfigParser()
@@ -146,6 +146,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='A python script to parse AniMath scripts.')
     parser.add_argument('text', nargs='*',
         help='text to write (bypass -i and --demo if provided)')
+    parser.add_argument('-clean', action='store_true',
+        help='clean the workspace', dest='clean')
     parser.add_argument('-D', nargs='?', type=int, const=DEFAULT_DPI,
         help='output resolution of text', metavar='dpi', dest='outres')
     parser.add_argument('-i', nargs='?',
@@ -156,7 +158,7 @@ if __name__ == '__main__':
         help='name of template file', metavar='template', dest='template')
     parser.add_argument('-cjk', action='store_true',
         help='enable xeCJK package', dest='cjk')
-    parser.add_argument('--demo', nargs='?', const='hello_world',
+    parser.add_argument('-demo', nargs='?', const='hello_world',
         help='name of demo to be executed', metavar='demo_name')
     args, unknown = parser.parse_known_args()
 
@@ -197,6 +199,10 @@ if __name__ == '__main__':
     elif args.input is not None:
         """Turn AniLaTeX file into still image"""
         parse_animath(args.input)
+
+    if args.clean:
+        """Clean up"""
+        rmtree(os.path.join(PROJECT_DIR, 'demo', 'ws'), ignore_errors=True)
     else:
         """On the top of the hill is a lonely help page"""
         parser.print_help()
