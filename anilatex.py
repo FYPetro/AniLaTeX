@@ -51,7 +51,7 @@ def print_latex(body, workspace, filename='temp', template=None, cjk=False, dpi=
 \\setCJKfamilyfont{{korm}}{{{}}}
 \\newcommand\\Chi{{\\CJKfamily{{zhrm}}\\CJKnospace}}
 \\newcommand\\Jpn{{\\CJKfamily{{jarm}}\\CJKnospace}}
-\\newcommand\\Kor{{\\CJKfamily{{korm}}\\CJKnospace}}
+\\newcommand\\Kor{{\\CJKfamily{{korm}}\\CJKspace}}
 """.format(DEFAULT_FONT['chinese'], DEFAULT_FONT['japanese'], DEFAULT_FONT['korean'])
     default_inputs = {
         'preamble': '',
