@@ -175,7 +175,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', nargs='?',
         help='name of template file', metavar='template', dest='template')
     parser.add_argument('-d', nargs='?', const='hello_world',
-        help='name of demo to be executed', metavar='demo')
+        help='name of demo to be executed', metavar='name', dest='demo')
     args, unknown = parser.parse_known_args()
 
     # Set default output name
