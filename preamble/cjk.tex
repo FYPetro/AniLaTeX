@@ -1,0 +1,19 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% This is file 'cjk.tex' and is part of the AniLaTeX project
+%%
+%% This file is an AniLaTeX preamble file that provides XeLaTeX CJK support.
+%%
+%% v\input{AniLaTeX-version} - \input{AniLaTeX-date}
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Configuration
+\usepackage{fontspec}
+\usepackage{xeCJK}
+% Reference: https://tex.stackexchange.com/a/45403
+\setCJKfamilyfont{zhrm}{\input{AniLaTeX-fontchi}}
+\setCJKfamilyfont{jarm}{\input{AniLaTeX-fontjpn}}
+\setCJKfamilyfont{korm}{\input{AniLaTeX-fontkor}}
+\newcommand\Chi{\CJKfamily{zhrm}\CJKnospace}
+\newcommand\Jpn{\CJKfamily{jarm}\CJKnospace}
+\newcommand\Kor{\CJKfamily{korm}\CJKspace}

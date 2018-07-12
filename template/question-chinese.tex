@@ -1,12 +1,18 @@
-﻿% Standalone theorem with proof template.
+﻿% Standalone multiple-choice template in Chinese.
+% 选择题模板。
 \documentclass[preview,margin=\input{AniLaTeX-margin={2pt}}]{\input{AniLaTeX-documentclass={standalone}}}
 \input{AniLaTeX-preamble}
+\usepackage{enumitem}
 \usepackage{amsthm}
 \theoremstyle{\input{AniLaTeX-style={definition}}}
-\newtheorem*{theorem}{\input{AniLaTeX-theorem={Theorem}}}
-\renewcommand*{\proofname}{\input{AniLaTeX-proof={Proof}}}
-\begin{AniLaTeX-boldname}
+\newtheorem*{question}{\input{AniLaTeX-question={问题}}}
+% Reference: https://tex.stackexchange.com/a/334788
+\usepackage{stackengine}
+\newcommand\funderline[1]{%
+  \stackengine{0pt}{\underline{\qquad\vphantom{#1}}}{#1}{O}{c}{F}{F}{L}}
+\newcommand\blank{\funderline{\phantom{blank}}}
 % Reference: https://tex.stackexchange.com/a/43971
+\begin{AniLaTeX-boldname}
 \makeatletter
 \def\th@plain{%
   \thm@notefont{}% same as heading font
@@ -19,14 +25,12 @@
 \makeatother
 \end{AniLaTeX-boldname}
 \begin{document}
-\begin{theorem}[\input{AniLaTeX-name}]
+\begin{question}[\input{AniLaTeX-name}]
 \input{AniLaTeX-body:1={Content.}}
-\end{theorem}
+\end{question}
 \begin{AniLaTeX-body:2}
-\begin{proof}\begin{AniLaTeX-qed}
-\renewcommand{\qedsymbol}{\input{AniLaTeX-qed}}
-\end{AniLaTeX-qed}
-\input{AniLaTeX-body:2={Proof.}}
-\end{proof}
+\begin{enumerate}[label=\input{AniLaTeX-label={\Alph*.}}]
+\input{AniLaTeX-body:2}
+\end{enumerate}
 \end{AniLaTeX-body:2}
 \end{document}

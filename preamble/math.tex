@@ -1,0 +1,46 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% This is file 'math.tex' and is part of the AniLaTeX project
+%%
+%% This file is an AniLaTeX preamble file that provides math-related symbols
+%% and macros
+%%
+%% v\input{AniLaTeX-version} - \input{AniLaTeX-date}
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Configuration
+\usepackage{amsmath,amssymb}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% General %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Unary operators
+\newcommand*\inverse[1]{#1^{-1}}
+% Text
+\newcommand*\textiff{iff}
+% Text in math environment
+\newcommand*\unit[1]{\ \text{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Set  Theory %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Set notation
+\newcommand*\setmid[2]{\left\{{#1}\mid{#2}\right\}}
+\newcommand*\setbuild[2]{\left\{{#1}:{#2}\right\}}
+\newcommand*\setenum[1]{\left\{#1\right\}}
+% Unary operators
+\newcommand*\setcard[1]{\left|{#1}\right|}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Abstract  Algebra %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Operator names
+\DeclareMathOperator{\opgpaut}{Aut}
+\DeclareMathOperator{\opgpchar}{char}
+\DeclareMathOperator{\opgpinn}{Inn}
+% Non-equivalence relations
+\newcommand*\gpchar{\mathbin{\opgpchar}}
+\newcommand*\gpnormal{\mathbin{\triangleleft}}
+\let\subgroupeq\subseteq
+% Equivalence relations
+% Binary operators
+\newcommand*\gpindex[2]{[{#1}:{#2}]}
+% Applying actions and functions
+\newcommand*\applyact[2]{({#2}){#1}}
+\newcommand*\applyfun[2]{{#1}({#2})}
+% Functions
+\newcommand*\gpaut[1]{\applyfun{\opgpaut}{#1}}
+\newcommand*\gpinn[1]{\applyfun{\opgpinn}{#1}}

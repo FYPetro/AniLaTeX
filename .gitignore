@@ -1,2 +1,3 @@
 ﻿# Exclude all AniLaTeX workspaces.
 /demo/*/
+__pycache__/
