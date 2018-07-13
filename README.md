@@ -29,3 +29,9 @@ CJK support: ![CJK support](https://github.com/FYPetro/AniLaTeX/blob/master/imag
 ![bclogo example](https://github.com/FYPetro/AniLaTeX/blob/master/image/bclogo.png)
 
     anilatex.py "LaTeX is a document preparation system. When writing, the writer uses plain text as opposed to the formatted text found in WYSIWYG (``what you see is what you get'') word processors like Microsoft Word, LibreOffice Writer and Apple Pages. The writer uses markup tagging conventions to define the general structure of a document (such as article, book, and letter) to stylise text throughout a document (such as bold and italics), and to add citations and cross-references. A TeX distribution such as TeX Live or MikTeX is used to produce an output file (such as PDF or DVi) suitable for printing or digital distribution. Within the typesetting system, its name is stylised as \LaTeX. {\Kor 위 단락} {\Chi 节选自} {\Jpn ウイキペディア} on \today." --title "What is \LaTeX?" --option "logo={\bcattention}" -p cjk -t bclogo -D 72 -o bclogo
+
+Directive to use packages `-u package option1 ... optionN` and preamble snippets `-p preamble`:
+
+![amsmath wrapper example](https://github.com/FYPetro/AniLaTeX/blob/master/image/thm-iso.png)
+
+    anilatex.py -o thm-iso "Let $\varphi:G\to H$ be a surjective homomorphism and let $N=\gpker{\varphi}$.  Then $H\cong G/N$.  In fact, there exists a unique isomorphism $\theta:G/N\to H$ such that $\pi\theta=\varphi$, where $\pi$ is the canonical homomorphism $G\to G/N$.\begin{figure}\centering\begin{tikzcd}G\arrow{rr}{\varphi}\arrow[rd,""\pi""']&&H\\&G/N\arrow[ru,dashed,""\theta""']&\end{tikzcd}\end{figure}" -D 72 -t amsthm -p math -u tikz-cd --name "Isomorphism" --boldname

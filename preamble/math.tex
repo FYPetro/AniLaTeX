@@ -18,7 +18,11 @@
 \newcommand*\textiff{iff}
 % Text in math environment
 \newcommand*\unit[1]{\ \text{#1}}
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Set  Theory %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Special sets
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
 % Set notation
 \newcommand*\setmid[2]{\left\{{#1}\mid{#2}\right\}}
 \newcommand*\setbuild[2]{\left\{{#1}:{#2}\right\}}
@@ -29,18 +33,35 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Abstract  Algebra %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Operator names
 \DeclareMathOperator{\opgpaut}{Aut}
+\DeclareMathOperator{\opgpcenter}{\mathbf{Z}}
+\DeclareMathOperator{\opgpcentralizer}{\mathbf{C}}
 \DeclareMathOperator{\opgpchar}{char}
 \DeclareMathOperator{\opgpinn}{Inn}
+\DeclareMathOperator{\opgpker}{ker}
+\DeclareMathOperator{\opgpnormalizer}{\mathbf{N}}
+\DeclareMathOperator{\opgpsym}{Sym}
 % Non-equivalence relations
 \newcommand*\gpchar{\mathbin{\opgpchar}}
-\newcommand*\gpnormal{\mathbin{\triangleleft}}
+\newcommand*\normalsub{\mathbin{\triangleleft}}
+\let\subgroup<
 \let\subgroupeq\subseteq
+\let\supgroupeq\supseteq
+\let\supgroup>
 % Equivalence relations
 % Binary operators
+\newcommand*\gpcomm[1]{[{#1}]}
 \newcommand*\gpindex[2]{[{#1}:{#2}]}
 % Applying actions and functions
 \newcommand*\applyact[2]{({#2}){#1}}
 \newcommand*\applyfun[2]{{#1}({#2})}
+\newcommand*\asfun[1]{\applyfun{#1}{\cdot}}
+\newcommand*\asact[1]{\applyact{#1}{\cdot}}
+\newcommand*\gpact[2]{{#2}\cdot{#1}}
 % Functions
 \newcommand*\gpaut[1]{\applyfun{\opgpaut}{#1}}
+\newcommand*\gpcenter[1]{\applyfun{\opgpcenter}{#1}}
+\newcommand*\gpctlz[2]{\applyfun{\opgpcentralizer_{#1}}{#2}}
 \newcommand*\gpinn[1]{\applyfun{\opgpinn}{#1}}
+\newcommand*\gpker[1]{\applyfun{\opgpker}{#1}}
+\newcommand*\gpnmlz[2]{\applyfun{\opgpnormalizer_{#1}}{#2}}
+\newcommand*\gpsym[1]{\applyfun{\opgpsym}{#1}}
